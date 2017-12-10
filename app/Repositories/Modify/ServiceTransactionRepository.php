@@ -9,6 +9,7 @@ use Illuminate\Pagination\Paginator;
 class ServiceTransactionRepository implements ServiceTransactionInterface
 {
     protected $template;
+    protected $response;
     private $limit;
     private $offset;
     private $model;
@@ -27,37 +28,7 @@ class ServiceTransactionRepository implements ServiceTransactionInterface
     {
         return $this->model->paginate($this->limit);
     }
-    public function query()
-    {
-        return $this->model->where(function ($query) {
-            if (\Request::has('msisdn')) {
-                $query->where('msisdn', \Request::get('msisdn'));
-            }if (\Request::has('operator')) {
-                $query->where('operator', \Request::get('operator'));
-            }if (\Request::has('step')) {
-                $query->where('step', \Request::get('step'));
-            }if (\Request::has('action')) {
-                $query->where('action', \Request::get('action'));
-            }if (\Request::has('mcc_mnc')) {
-                $query->where('mcc_mnc', \Request::get('mcc_mnc'));
-            }if (\Request::has('type')) {
-                $query->where('type', \Request::get('type'));
-            }if (\Request::has('accepted')) {
-                $query->where('accepted', \Request::get('accepted'));
-            }if (\Request::has('device')) {
-                $query->where('device', 'like', '%' . \Request::get('device') . '%');
-            }if (\Request::has('browser')) {
-                $query->where('browser', 'like', '%' . \Request::get('browser') . '%');
-            }if (\Request::has('warning_level')) {
-                $query->where('warning_level', \Request::get('warning_level'));
-            }if (\Request::has('start_date')) {
-                $query->where('created_at', '>=', $this->convertDate(\Request::get('start_date')));
-            }if (\Request::has('end_date')) {
-                $query->where('created_at', '<=', $this->convertDate(\Request::get('end_date')));
-            }
-        })->orderby('id', 'desc')->paginate($this->limit);
 
-    }
     public function convertDate($date = '')
     {
         return date('Y-m-d H:i:s', strtotime(str_replace(['/'], "-", $date)));
@@ -79,30 +50,7 @@ class ServiceTransactionRepository implements ServiceTransactionInterface
     {
         $this->template->setConfigFile($template);
     }
-    public function genSearFormTransaction($value = '')
-    {
 
-    }
-    public function call3rdQueryOperator()
-    {
-        $page = \Request::has('page') ? \Request::get('page') : 1;
-        $this->offset = ($page == 1) ? $this->offset : ($this->limit * $page) - $this->limit;
-        $url = env('SHARE_SERVICE_API') . 'api/v1/international/query-operator-report';
-        $url = $url . '?' . http_build_query(\Request::all()) . "&limit=" . $this->limit . "&offset=" . $this->offset;
-        $call3rdApi = $this->call3rd($url);
-        if (isset($_GET['m_dd'])) {
-            dump($this->offset);
-            dump($page);
-            dump($url);
-            dump($call3rdApi);
-        }
-        if ($call3rdApi['header']['code'] == 200) {
-            return $this->paginate($call3rdApi['data'], $call3rdApi['total']);
-        } else {
-            return $this->paginate([], 0);
-        }
-        return false;
-    }
     public function paginate($items, $total)
     {
         return new LengthAwarePaginator($items, $total,
@@ -111,12 +59,23 @@ class ServiceTransactionRepository implements ServiceTransactionInterface
     public function call3rd($url)
     {
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
         $response = curl_exec($ch);
+        if (\Request::has('debug')) {
+            dump($url);
+            echo "<a href='{$url}' target='_blank' >click </a>";
+            dump(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+            dump(curl_errno($ch));
+            dump(curl_error($ch));
+        }
         curl_close($ch);
-        return json_decode($response, true);
+
+        $this->response = json_decode($response, true);
+        return $this->response;
     }
     public function call3rdPost($url, $data)
     {
@@ -130,12 +89,69 @@ class ServiceTransactionRepository implements ServiceTransactionInterface
         $response = curl_exec($ch);
 
         if (isset($data['debug'])) {
+            dump($data);
+            dump($url);
             dump(curl_getinfo($ch, CURLINFO_HTTP_CODE));
             dump(curl_errno($ch));
             dump(curl_error($ch));
             curl_close($ch);
         }
-        return json_decode($response, true);
+        $this->response = json_decode($response, true);
+        return $this->response;
+    }
+    public function getResposne()
+    {
+        return $this->response;
+    }
+    public function warpCallPage($url = '', $params = array())
+    {
+        $page = \Request::has('page') ? \Request::get('page') : 1;
+        $this->offset = ($page == 1) ? $this->offset : ($this->limit * $page) - $this->limit;
+        $url = $url . '?' . http_build_query(\Request::all()) . "&limit=" . $this->limit . "&offset=" . $this->offset . "&" . http_build_query($params);
+
+        $call3rdApi = $this->call3rd($url);
+        if ($call3rdApi['header']['code'] == 200) {
+            return $this->paginate($call3rdApi['data'], $call3rdApi['total']);
+        } else {
+            return $this->paginate([], 0);
+        }
+        return false;
+    }
+    public function uploadFileRaw($url, $files, $data)
+    {
+        $uploadfile = $this->warpFileUpload($files);
+        $data = array_merge($uploadfile, $data);
+        $request = curl_init($url);
+        $headers = array(
+            "authorization: Basic Ym9vbTpib29teg==",
+            "cache-control: no-cache",
+        );
+        curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($request, CURLOPT_POST, true);
+        curl_setopt($request, CURLOPT_TIMEOUT, 30);
+        curl_setopt($request, CURLOPT_HEADER, 'multipart/form-data');
+        curl_setopt(
+            $request, CURLOPT_POSTFIELDS, $data
+        );
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($request);
+
+        curl_close($request);
+        return json_decode($result, true);
+
+    }
+    public function warpFileUpload($files)
+    {
+        $fileUpload = array();
+        foreach ($files as $key => $file) {
+            if (!empty($file)) {
+                $realpath = realpath($file);
+                $path = $file->move(public_path('upload'), $file->getClientOriginalName())->getpathName();
+                $fileUpload[$key] = curl_file_create($path, $file->getClientMimeType());
+            }
+
+        }
+        return $fileUpload;
     }
 
 }

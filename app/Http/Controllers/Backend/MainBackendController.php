@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Backend;
 
 use App\Benefit;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCategory;
 use App\Http\Requests\CreateStepRequest;
+use App\Http\Requests\DeleteCategoryRequest;
+use App\Http\Requests\GetUpdateCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Requests\UpdateStepRequest;
 use App\Repositories\Ebirthday\serviceEbirthdayRepository as ServiceEbirthday;
 use App\Repositories\Interfaces\ServiceWarpTemplateInterface;
+use App\Repositories\Member\MemberRepository;
 
 class MainBackendController extends Controller
 {
@@ -23,7 +28,7 @@ class MainBackendController extends Controller
     public function index()
     {
         $view['data'] = $this->ebirthday->page(30);
-        $view['view'] = $this->template->generateFrom('ebirthday');
+        $view['view'] = genformSearch('ebirthday');
         return view('backend.ebrithday-list', $view);
     }
     public function store(CreateStepRequest $request)
@@ -65,5 +70,33 @@ class MainBackendController extends Controller
         $this->benefit->delete($id);
         return back()
             ->withFlashSuccess(trans('lang.alert.delete-step-success'));
+    }
+    public function getMemberList()
+    {
+        return app(MemberRepository::class)->getList();
+        dd($k);
+    }
+    public function getFormCreate()
+    {
+        return app(MemberRepository::class)->getCreateForm();
+    }
+    public function submitFormCreate(CreateCategory $request)
+    {
+        app(MemberRepository::class)->createDataApi($request->all());
+        return redirect()->route('transaction.lisst')->withFlashSuccess('create data success');
+    }
+    public function getFormUpdate(GetUpdateCategoryRequest $request)
+    {
+        return app(MemberRepository::class)->getUpdateForm($request->id);
+    }
+    public function submitFormUpdate(UpdateCategoryRequest $request)
+    {
+        app(MemberRepository::class)->updateDataApi($request->id, $request->all());
+        return redirect()->route('transaction.lisst')->withFlashSuccess('update data success');
+    }
+    public function submitFormDelete(DeleteCategoryRequest $request)
+    {
+        app(MemberRepository::class)->deleteDataApi($request->id);
+        return redirect()->route('transaction.lisst')->withFlashSuccess('delete data success');
     }
 }

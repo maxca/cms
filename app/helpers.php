@@ -1,4 +1,5 @@
 <?php
+use App\Services\Data\Repositories\ServiceWrapTemplate as Template;
 
 /**
  * Global helpers file with misc functions
@@ -170,4 +171,23 @@ if (!function_exists('rnd')) {
 function genId($perpage, $page)
 {
     return ($page !== 1) ? $perpage * ($page - 1) + 1 : $page;
+}
+if (!function_exists('genformCreate')) {
+    function genformCreate($config, $recapValue)
+    {
+        if (!empty($recapValue)) {
+            $app = app(Template::class)->initial('template.input-form-one', $config);
+            $app->recapValue($recapValue);
+            return $app->generateFrom();
+        }
+        return app(Template::class)->initial('template.input-form-one', $config)
+            ->generateFrom();
+    }
+}
+if (!function_exists('genformSearch')) {
+    function genformSearch($config)
+    {
+        return app(Template::class)->initial('template.input-form', $config)
+            ->generateFrom();
+    }
 }
