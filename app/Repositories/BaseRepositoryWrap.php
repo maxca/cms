@@ -120,6 +120,7 @@ abstract class BaseRepositoryWrap extends BaseRepository
         $listData = $this->call3rd->warpCallPage($this->configEndpoint['list'], $this->params);
         $responseData = $this->call3rd->getResposne();
         $keys = collect(array_get($responseData, 'data.item.0'))->keys();
+        // dd($this->configListSearch);
         return $this->view->genFormList(genformSearch($this->configListSearch), $listData);
     }
     public function getDataByid($id = 0)

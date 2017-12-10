@@ -20,7 +20,7 @@ class ServiceTemplate
     }
     public function setConfigFile($fileName = '')
     {
-        $this->configForm = \Config::get($fileName);
+        $this->configForm = config($fileName);
     }
     public function getConfigFile()
     {

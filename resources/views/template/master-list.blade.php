@@ -23,6 +23,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(!empty($data['item']))
                                 <?php $id = genId($data->perPage(), $data->currentPage())?>
                                 @foreach ($data['item'] as $key => $list)
                                 <tr style="font-size: 12px !important">
@@ -66,6 +67,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
