@@ -6,7 +6,6 @@
             <input type="text" style="height: 33px;" placeholder="End date" name="end_date" class="input-sm form-control datetimepicker" autocomplete="off" @if(!empty($input['end_date']))value="{{$input['end_date']}}" @endif>
         </div>
 
-
 	{{-- <div class="col-sm-3 space">
 
     <label for="name" class="control-label">Created</label>

@@ -16,6 +16,7 @@
         <!-- Styles -->
         @yield('before-styles-end')
         {!! Html::style(elixir('css/backend.css')) !!}
+        {!! Html::style('js/template/jquery.datetimepicker.css') !!}
         @yield('after-styles-end')
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -59,5 +60,7 @@
     @yield('before-scripts-end')
     {!! HTML::script(elixir('js/backend.js')) !!}
     @yield('after-scripts-end')
+    @stack('datetime-script')
+
     </body>
 </html>

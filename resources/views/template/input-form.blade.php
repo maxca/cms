@@ -16,7 +16,7 @@ $page = $num / $perPage;?>
   @include('template.datetimepicker')
   @else
     @if(isset($input['label']))
-    <label for="name" class="control-label">{{ucfirst($input['label'])}}</label>
+    <label for="name" class="control-label"><i class="fa fa-edi"></i>{{ucfirst($input['label'])}}</label>
     @endif
     {{-- <div class="col-lg-3"> --}}
       @if($input['type'] =='text')

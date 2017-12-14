@@ -41,4 +41,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'middleware' => 'ad
     require (__DIR__ . '/Routes/Backend/Access.php');
     require (__DIR__ . '/Routes/Backend/LogViewer.php');
     require (__DIR__ . '/Routes/Backend/Tests/TestsRoute.php');
+    require (__DIR__ . '/Routes/Backend/Members/MembersRoute.php');
+    require (__DIR__ . '/Routes/Backend/Shop/ShopRoute.php');
+    require (__DIR__ . '/Routes/Backend/ShopPackage/ShopPackageRoute.php');
 });

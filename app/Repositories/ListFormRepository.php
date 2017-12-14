@@ -52,4 +52,11 @@ class ListFormRepository
         $view['title'] = $this->title;
         return view('template.master-update', $view)->render();
     }
+    public function getFormDetail($listData)
+    {
+        $view['data'] = $listData;
+        $view['route'] = $this->route;
+        $view['title'] = $this->title;
+        return view('template.master-detail', $view)->render();
+    }
 }

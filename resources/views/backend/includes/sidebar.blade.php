@@ -43,7 +43,32 @@
             @endauth
 
             <li class="{{ Active::pattern('admin/transaction/*') }}">
-                <a href="{!! route('transaction.list') !!}">URL Generate</a>
+                <a href="{!! route('transaction.list') !!}"><i class="fa fa-laptop"></i>URL Generate</a>
+            </li>
+            <li class="{{ Active::pattern('admin/members/*') }}">
+                <a href="{!! route('members.view') !!}"><i class="fa fa-laptop"></i>Members</a>
+            </li>
+
+            <li class="{{ Active::pattern('admin/shop/*') }}">
+               {{--  <a href="{!! route('shop.view') !!}"><i class="fa fa-laptop"></i>Shop</a>
+                <a href="{!! route('shop.view') !!}"><i class="fa fa-laptop"></i>Package</a>
+                <a href="{!! route('shop.view') !!}"><i class="fa fa-laptop"></i>Create Package</a> --}}
+                <a href="#">
+                    <i class="fa fa-laptop"></i>
+                    <span>Shop</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu {{ Active::pattern('admin/shop*', 'menu-open') }}" style="display: none; {{ Active::pattern('admin/shop*', 'display: block;') }}">
+                    <li class="{{ Active::pattern('admin/shop/list') }}">
+                        <a href="{!! url('admin/shop/list') !!}"><i class="fa fa-laptop"></i>Shop</a>
+                    </li>
+                    <li class="{{ Active::pattern('admin/shop/package') }}">
+                        <a href="{!! url('admin/shop/package') !!}"><i class="fa fa-laptop"></i>Package</a>
+                    </li>
+                    <li class="{{ Active::pattern('admin/shop/package/create') }}">
+                        <a href="{!! url('admin/shop/package/create') !!}"><i class="fa fa-laptop"></i>Create Package</a>
+                    </li>
+                </ul>
             </li>
 
             @if($user == 'Administrator')

@@ -1,11 +1,17 @@
 {{-- {{dd($formList)}} --}}
 {{-- {{dd($data['item'])}} --}}
 @extends ('backend.layouts.master')
-@section ('title', $title . ' | Transaction')
+@section ('title', $title . ' | List')
 @section('page-header')
-<h1>
-    <small>transaction</small>
-</h1>
+<h1><i class="fa  fa-th-large text-red"></i>
+    {{$title}}
+        <small>list</small>
+      </h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+    <li><a href="#">{{$title}}</a></li>
+    <li class="active">list</li>
+</ol>
 @endsection
 @section('content')
     @include('template.box-header',['route' => $route])
@@ -72,24 +78,23 @@
                         </table>
                     </div>
                     </div><!-- /.box-body -->
-                    <div class="box box-info">
-                        <div class="box-body">
+                        <div class="box-footer">
                             <div class="pull-left">Found : {{number_format($data->total())}} item</div>
                             <div class="pull-right">
                                 {!! $data->appends(Request::all())->links() !!}
                             </div>
                             <div class="clearfix"></div>
-                        </div><!-- /.box-body -->
-                    </div><!--box-->
-                            </div><!--box-success-->
-                            @stop
-                            @section('after-scripts-end')
-                            {!! Html::script('js/backend/access/permissions/script.js') !!}
-                            {!! Html::script('js/backend/access/users/script.js') !!}
-                            @stop
-                            {{-- <script type="text/javascript"></script> --}}
-                            <style type="text/css">
-                            div.form-group {
-                            font-size: 11.5px !important;
-                            }
-                            </style>
+                        </div><!-- /.box-footer -->
+                </div><!--box-success-->
+                @stop
+                @section('after-scripts-end')
+                    {!! Html::script('js/template/jquery.datetimepicker.js') !!}
+                    {!! Html::script('js/template/datetimeactive.js') !!}
+                    {!! Html::script('js/backend/access/permissions/script.js') !!}
+                    {!! Html::script('js/backend/access/users/script.js') !!}
+                @stop
+                <style type="text/css">
+                div.form-group {
+                font-size: 11.5px !important;
+                }
+                </style>

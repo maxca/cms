@@ -128,6 +128,11 @@ abstract class BaseRepositoryWrap extends BaseRepository
         $data = $this->call3rd->warpCallPage($this->configEndpoint['list'] . '?id=' . $id);
         return $data['item'][0];
     }
+    public function getFormDetail($id = 0)
+    {
+        $data = $this->getDataByid($id);
+        return $this->view->getFormDetail($data);
+    }
     public function getCreateForm()
     {
         $this->routeAction = $this->routeAliasName['create'];

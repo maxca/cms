@@ -173,9 +173,10 @@ function genId($perpage, $page)
     return ($page !== 1) ? $perpage * ($page - 1) + 1 : $page;
 }
 if (!function_exists('genformCreate')) {
-    function genformCreate($config, $recapValue)
+    function genformCreate($config, $recapValue = [])
     {
         if (!empty($recapValue)) {
+
             $app = app(Template::class)->initial('template.input-form-one', $config);
             $app->recapValue($recapValue);
             return $app->generateFrom();

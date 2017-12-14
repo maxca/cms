@@ -6,6 +6,7 @@
     @else
 
     @if(isset($input['label']))
+    <i class="fa fa-edi"></i>
     <label for="name" class="col-lg-2 control-label">{{ucfirst($input['label'])}}</label>
     @endif
     <div class="col-lg-10">
