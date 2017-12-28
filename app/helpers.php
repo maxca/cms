@@ -192,3 +192,38 @@ if (!function_exists('genformSearch')) {
             ->generateFrom();
     }
 }
+if (!function_exists('curlPost')) {
+    function curlPost($url, $token, $params = array())
+    {
+        //initate curl object
+        $curl = new \anlutro\cURL\cURL;
+
+        //make a curl method  get request
+        $request = $curl->newRequest('post', $url, $params)
+            ->setHeader('Accept-Charset', 'utf-8')
+            ->setHeader('Accept-Language', 'en-US')
+            ->setHeader('authorization', $token);
+        $response_curl = $request->send();
+
+        return isset($response_curl->body) ? json_decode($response_curl->body) : array();
+    }
+}
+if (!function_exists('curlPostRAW')) {
+    function curlPostRAW($url, $token, $params = array())
+    {
+        //initate curl object
+        $curl = new \anlutro\cURL\cURL;
+
+        //make a curl method  get request
+        $request = $curl->newJsonRequest('post', $url, $params)
+            ->setHeader('Accept-Charset', 'utf-8')
+            ->setHeader('Accept-Language', 'en-US')
+            ->setHeader('Content-Type', 'application/json')
+            ->setOption(CURLOPT_POSTFIELDS, json_encode($params))
+            ->setHeader('authorization', $token);
+        $response_curl = $request->send();
+        // dump($response_curl);
+        // dd($response_curl->body);
+        return isset($response_curl->body) ? json_decode($response_curl->body) : array();
+    }
+}

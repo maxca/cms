@@ -1,9 +1,9 @@
 <?php
-namespace App\Repositories\Member;
+namespace App\Repositories\Category;
 
 use App\Repositories\BaseRepositoryWrap;
 
-class MemberRepository extends BaseRepositoryWrap
+class CategoryRepository extends BaseRepositoryWrap
 {
     /**
      * set all of endpoint api
@@ -21,9 +21,9 @@ class MemberRepository extends BaseRepositoryWrap
      * @var array
      */
     protected $routeAliasName = [
-        'create' => 'transaction.create',
-        'update' => 'transaction.update',
-        'delete' => 'transaction.delete',
+        'create' => 'category.create',
+        'update' => 'category.update',
+        'delete' => 'category.delete',
     ];
 
     /**
@@ -32,14 +32,15 @@ class MemberRepository extends BaseRepositoryWrap
      */
     protected $configFormColumn = [
         "cate_id",
+        "slug",
+        "commission",
         "parent_cate_id",
         "level",
-        "icon_img",
-        "cate_img_th",
-        "cate_img_en",
+        // "cate_img_en",
         "sort",
         "cate_name_th",
         "cate_name_en",
+        "created_at",
     ];
 
     /**
@@ -48,19 +49,20 @@ class MemberRepository extends BaseRepositoryWrap
      * @var array
      */
     protected $action = [
-        'view' => false,
+        'view' => true,
         'edit' => true,
         'dele' => true,
-        'route_view' => 'transaction.lisst',
-        'route_edit' => 'transaction.update',
-        'route_dele' => 'transaction.delete',
+        'route_list' => 'category.view',
+        'route_view' => 'category.detail',
+        'route_edit' => 'category.submit.update',
+        'route_dele' => 'category.submit.delete',
     ];
 
     /**
      * set config form search attribute
      * @var string
      */
-    protected $configListSearch = 'ir-step-search';
+    protected $configListSearch = 'category.list';
 
     /**
      * set config create attribute
@@ -68,18 +70,30 @@ class MemberRepository extends BaseRepositoryWrap
      */
 
     protected $configCreate = 'category.create';
+    protected $configUpdate = 'category.update';
     /**
      * set route search action
      * @get form alias naming router.
      * @var string
      */
-    protected $routeAction = 'transaction.lisst';
+    protected $routeAction = 'category.view';
 
     /**
      * set title name of page
      * @var string
      */
     protected $title = 'Category';
+
+    protected $lang = 'th';
+    /**
+     * set images list
+     * @var array
+     */
+    protected $imageList = [
+        'cate_img_th',
+        'cate_img_en',
+        'icon_img',
+    ];
 
     public function __construct()
     {
@@ -96,7 +110,30 @@ class MemberRepository extends BaseRepositoryWrap
     }
     public function getCreateForm()
     {
+        $this->getParentCateid();
         return parent::getCreateForm();
+    }
+
+    public function getParentCateid()
+    {
+        $level = \Request::get('level', 1);
+        $this->injectNode['level'] = $level;
+
+        if ($level == 1) {
+            $this->configCreate = 'category.createMainCate';
+
+        } else {
+            parent::setParam(['level' => $level - 1]);
+            $data = parent::callGetListData();
+            $data = !is_null($data['item']) ? $data['item'] : array();
+            $nodeInject = array();
+
+            foreach ($data as $key => $value) {
+                $nodeInject['parent_cate_id'][$value['cate_id']] = $value['cate_name_' . $this->lang];
+            }
+            $this->injectNode = $nodeInject;
+        }
+
     }
 
 }

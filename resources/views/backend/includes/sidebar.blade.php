@@ -70,7 +70,7 @@
                     </li>
                 </ul>
             </li>
-
+            @include('backend.includes.category-nav')
             @if($user == 'Administrator')
             <li class="{{ Active::pattern('admin/log-viewer*') }} treeview">
                 <a href="#">

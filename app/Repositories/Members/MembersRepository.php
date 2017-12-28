@@ -33,6 +33,7 @@ class MembersRepository extends BaseRepositoryWrap
     protected $configFormColumn = [
         'member_type',
         // 'role_id',
+        // 'sdfsdf',
         // 'facebook_id',
         // 'google_id',
         'email',

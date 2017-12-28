@@ -2,27 +2,6 @@
 
 return [
     [
-        'name' => 'cate_id',
-        'label' => 'category id',
-        'id' => 'cate_id',
-        'type' => 'number',
-        'required' => 'required',
-        'placeholder' => 'please insert category id',
-    ], [
-        'name' => 'parent_cate_id',
-        'label' => 'parent category id',
-        'id' => 'parent_cate_id',
-        'type' => 'select_add',
-        'required' => 'required',
-        'placeholder' => 'please insert parent_cate_id',
-        'select' => [
-            'displayname' => 'select parent category id',
-            'list' => [
-
-            ],
-        ],
-    ],
-    [
         'name' => 'cate_name_th',
         'label' => 'category name th',
         'id' => 'cate_name_th',
@@ -38,6 +17,22 @@ return [
         'placeholder' => 'please insert cate_name_en',
     ],
     [
+        'name' => 'cate_id',
+        'label' => 'category id',
+        'id' => 'cate_id',
+        'type' => 'number',
+        'required' => 'required',
+        'placeholder' => 'please insert category id',
+    ], [
+        'name' => 'parent_cate_id',
+        'label' => 'parent category id',
+        'id' => 'parent_cate_id',
+        'type' => 'disable',
+        'required' => 'required',
+        'value' => 1,
+        'placeholder' => 'please insert',
+
+    ], [
         'name' => 'level',
         'label' => 'level',
         'id' => 'level',
@@ -56,7 +51,7 @@ return [
         'name' => 'commission',
         'label' => 'commission %',
         'id' => 'commission',
-        'type' => 'text',
+        'type' => 'number',
         'required' => 'required',
         'placeholder' => 'please insert commission',
     ], [
@@ -87,9 +82,18 @@ return [
         'type' => 'number',
         'required' => 'required',
         'placeholder' => 'please insert sort limit',
-        'value' => '99999',
+        'value' => '9999',
     ],
     [
+        'name' => 'parent_cate_id',
+        'label' => '',
+        'id' => 'parent_cate_id',
+        'type' => 'hidden',
+        'required' => 'required',
+        'value' => 1,
+        'placeholder' => 'please insert',
+
+    ], [
         'name' => 'level',
         'label' => '',
         'id' => 'level',

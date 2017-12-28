@@ -1,4 +1,3 @@
-{{-- {{dd($data)}} --}}
 @extends ('backend.layouts.master')
 
 @section ('title', $title.' | detail' )
@@ -8,45 +7,33 @@
         {{ $title }}
         <small>detail </small>
     </h1>
+    <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+    <li><a href="#">{{$title}}</a></li>
+    <li class="active">detail</li>
+</ol>
 @endsection
 
 @section('content')
+    {!! Form::open(['route' => $route, 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'post','files' => true]) !!}
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3 class="box-title">detail</h3>
-            </div>
+                <h3 class="box-title">Detail {{$title}}</h3>
+            </div><!-- /.box-header -->
             <div class="box-body">
-                <table id="user" class="table table-bordered table-striped" style="clear: both">
-                        <tbody>
-                        @foreach ($data as $key => $value)
-                        <tr>
-                            <td>{{$key}}</td>
-                            @if(in_array($key, listAllow()))
-                            <td>
-                               {{--  <a href="{{genImg($data['item'][0],$value)}}" target="_blank">
-                                    <img src="{{genImg($data['item'][0],$value)}}" width="200" >
-                                </a> --}}
-                            </td>
-                            @else
-                            <td>{{renderArray($value)}}</td>
-                            @endif
-                        </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-            </div>
-            <div class="box box-info">
-             <div class="box-body">
+             {!! $view!!}
+             {!! Form::hidden('id',Request::get('id'))!!}
+            </div><!-- /.box-body -->
+            <div class="box box-footer">
                 <div class="pull-left">
-                    <a href="#" id="back" class="btn btn-danger btn-ls">Back</a>
-                </div>
-                <div class="pull-right">
-                    <input type="submit" id='create' class="btn btn-success btn-ls" value="Back" />
+                    <a href="{{route(array_get($action,'route_list'))}}" class="btn btn-danger btn-ls">
+                        <i class="fa  fa-caret-square-o-left"></i> Back
+                    </a>
                 </div>
                 <div class="clearfix"></div>
-            </div><!-- /.box-body -->
             </div>
         </div><!--box-->
+
     {!! Form::close() !!}
 @stop
 

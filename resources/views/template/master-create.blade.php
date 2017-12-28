@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-    {!! Form::open(['route' => $route, 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'post']) !!}
+    {!! Form::open(['route' => $route, 'class' => 'form-horizontal form-validate', 'role' => 'form', 'method' => 'post','files' => true]) !!}
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="fa fa-briefcase"></i> Create {{$title}}</h3>
@@ -26,7 +26,7 @@
 
              <div class="box-footer">
                 <div class="pull-left">
-                    <a href="#" id="back" class="btn btn-danger btn-ls">
+                    <a href="{{route(array_get($action,'route_list'))}}" id="back" class="btn btn-danger btn-ls">
                         <i class="fa  fa-caret-square-o-left"></i> Back
                     </a>
                 </div>
@@ -47,4 +47,14 @@
     {!! Html::script('js/backend/access/permissions/script.js') !!}
     {!! Html::script('js/backend/access/users/script.js') !!}
     {!! Html::script('js/backend/validate.js') !!}
+    <script type="text/javascript">
+        $(function(){
+            $("form.form-validate").each(function(index,element){
+                console.log(index);
+                console.log(element);
+            });
+            $("form.form-validate").validate();
+
+        });
+    </script>
 @stop

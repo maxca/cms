@@ -1,4 +1,6 @@
+{{-- {{ dump($data)}} --}}
 @foreach ($data as $i => $input)
+{{-- {{dump($input)}} --}}
 <div class="form-group">
 
     @if($input['type'] == 'daterange')
@@ -11,9 +13,9 @@
     @endif
     <div class="col-lg-10">
       @if($input['type'] =='text')
-       {!! Form::text($input['name'],genOld($input),['class'=>'form-control','name' => $input['name'],'id' => $input['id'],'placeholder' => $input['placeholder']]) !!}
+       {!! Form::text($input['name'],genOld($input),['class'=>'form-control','name' => $input['name'],'id' => $input['id'],'placeholder' => $input['placeholder'],'required' => array_get($input,'required')]) !!}
       @elseif ($input['type'] == 'select')
-        {!! Form::select($input['name'],$input['select']['list'], genOld($input), ['class'=>'form-control','placeholder' => $input['placeholder']]) !!}
+        {!! Form::select($input['name'],$input['select']['list'], genOld($input), ['class'=>'form-control','placeholder' => $input['placeholder'],'required' => array_get($input,'required')]) !!}
       @elseif ($input['type'] == 'select_add')
       {!! Form::select($input['name'],$input['select']['list'], genSelect($input), ['class'=>'form-control','placeholder' => $input['placeholder']]) !!}
       @elseif($input['type'] == 'number')
@@ -26,6 +28,13 @@
       @elseif($input['type'] == 'texarea')
       {!! Form::textarea($input['name'],genOld($input),['class'=>'form-control'])!!}
       @elseif($input['type'] == 'file')
+        @if(!empty($input['value']))
+            <p>
+              <img src="{{$input['value'][0]}}" width="50%" height="50%" class="img img-thumbnail">
+            </p>
+
+          {{-- {!! Form::image($input['value'][0],$input['name'],['width' => '50%','height' => '50%']) !!} --}}
+        @endif
       {!! Form::file($input['name'],['class'=>'form-control'])!!}
       @endif
 

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Libraries\Benchmark;
 use App\Repositories\BaseRepositoryInterface;
+use App\Repositories\UploadFileRepository as UploadImage;
 
 class BaseRepository implements BaseRepositoryInterface
 {
@@ -11,6 +12,12 @@ class BaseRepository implements BaseRepositoryInterface
     protected $model;
     protected $lang, $mergeCheck, $dataMerge;
     protected $langList = ['en', 'th'];
+
+    /**
+     * set token
+     * @var string
+     */
+    protected $token = "";
 
     public function __construct()
     {
@@ -129,9 +136,21 @@ class BaseRepository implements BaseRepositoryInterface
     {
         $this->mergeCheck = $status;
     }
-    public function warpLang($input)
+    public function postCallApi($url, $data)
     {
-        # code...
+        $this->response = curlPost($url, $this->token, $data);
+        return $this->response;
+    }
+    public function postCallApiJson($url, $data)
+    {
+        $this->response = curlPostRAW($url, $this->token, $data);
+        return $this->response;
+    }
+    public function uploadImage($images)
+    {
+        $this->response = app(UploadImage::class)->uploadFile($images)
+            ->getResponse();
+        return $this->response;
     }
 
 }

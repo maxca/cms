@@ -67,3 +67,11 @@ max: 2017-12-14 10:02:22
 require (__DIR__ . '/Routes/Backend/Shop}/Shop}Route.php');
 max: 2017-12-14 10:17:51
 require (__DIR__ . '/Routes/Backend/ShopPackage}/ShopPackage}Route.php');
+max: 2017-12-27 09:14:40
+require (__DIR__ . '/Routes/Backend/Category}/Category}Route.php');
+max: 2017-12-27 09:16:06
+require (__DIR__ . '/Routes/Backend/Category/CategoryRoute.php');
+max: 2017-12-27 09:17:08
+require (__DIR__ . '/Routes/Backend/\Category\}/\Category\}Route.php');
+max: 2017-12-27 09:17:51
+require (__DIR__ . '/Routes/Backend/Category/CategoryRoute.php');

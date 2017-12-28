@@ -37,10 +37,11 @@ class ServiceTemplate
     }
     public function recapValue($recap)
     {
+        // dump($recap);
         foreach ($recap as $key => $value) {
 
             foreach ($this->configForm as $configKey => $configValue) {
-                if ($configValue['name'] == $key) {
+                if (str_replace("[]", "", $configValue['name']) == $key) {
                     $this->configForm[$configKey]['value'] = $value;
                 }
                 if ($configValue['name'] == 'created_at') {
@@ -58,6 +59,7 @@ class ServiceTemplate
             }
 
         }
+        // dd($this->configForm);
     }
 
 }

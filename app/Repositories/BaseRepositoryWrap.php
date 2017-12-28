@@ -47,6 +47,11 @@ abstract class BaseRepositoryWrap extends BaseRepository
     protected $configCreate;
 
     /**
+     * set config update from
+     * @var string
+     */
+    protected $configUpdate;
+    /**
      * set config route
      * get form aliasname route
      * @var string
@@ -83,6 +88,24 @@ abstract class BaseRepositoryWrap extends BaseRepository
      */
     protected $view;
 
+    /**
+     * set inject node data
+     * @var array
+     */
+    protected $injectNode;
+
+    /**
+     * set hidden column
+     * @var array
+     */
+    protected $hiddenColumn;
+
+    /**
+     * set image column list
+     * @var array
+     */
+    protected $imageList;
+
     public function __construct()
     {
         parent::__construct();
@@ -96,7 +119,7 @@ abstract class BaseRepositoryWrap extends BaseRepository
     }
     protected function setParam($params = array())
     {
-        $this->params = $params;
+        $this->params = array_filter($params);
     }
     protected function setTitle($title)
     {
@@ -117,11 +140,14 @@ abstract class BaseRepositoryWrap extends BaseRepository
     }
     public function getListData()
     {
-        $listData = $this->call3rd->warpCallPage($this->configEndpoint['list'], $this->params);
+        $listData = $this->callGetListData();
         $responseData = $this->call3rd->getResposne();
         $keys = collect(array_get($responseData, 'data.item.0'))->keys();
-        // dd($this->configListSearch);
         return $this->view->genFormList(genformSearch($this->configListSearch), $listData);
+    }
+    public function callGetListData()
+    {
+        return $this->call3rd->warpCallPage($this->configEndpoint['list'], $this->params);
     }
     public function getDataByid($id = 0)
     {
@@ -131,24 +157,52 @@ abstract class BaseRepositoryWrap extends BaseRepository
     public function getFormDetail($id = 0)
     {
         $data = $this->getDataByid($id);
-        return $this->view->getFormDetail($data);
+        $listData = $this->getDataByid($id);
+        return $this->view->getFormDetail(genformCreate($this->configUpdate, $listData));
     }
     public function getCreateForm()
     {
         $this->routeAction = $this->routeAliasName['create'];
         $this->setView();
-        return $this->view->genformCreate(genformCreate($this->configCreate));
+
+        return $this->view->genformCreate(genformCreate($this->configCreate, $this->injectNode));
+    }
+    public function checkHiddenColumnCreate()
+    {
+        foreach ($this->configCreate as $key => $value) {
+            if (array_key_exists($value['name'], $this->hiddenColumn)) {
+                unset($this->configCreate[$key]);
+            }
+        }
     }
     public function getUpdateForm($id = '')
     {
         $this->routeAction = $this->routeAliasName['update'];
         $this->setView();
         $listData = $this->getDataByid($id);
-        return $this->view->getFormUpdate(genformCreate($this->configCreate, $listData));
+        return $this->view->getFormUpdate(genformCreate($this->configUpdate, $listData));
     }
     public function modifyData($type = 'create')
     {
-        return $this->call3rd->call3rdPost($this->configEndpoint[$type], $this->params);
+        $this->checkImageNodes($this->params);
+        return parent::postCallApiJson($this->configEndpoint[$type], $this->params);
+    }
+    public function checkImageNodes(&$params)
+    {
+        $images = array();
+        $params = array_filter($params);
+
+        foreach ($params as $key => $image) {
+            if (in_array($key, $this->imageList)) {
+                $array = parent::uploadImage($params[$key]);
+                $params[$key] = !empty($array) ? $array : false;
+                $images[$key] = $params[$key];
+                if (is_null($image[0])) {
+                    unset($params[$key]);
+                }
+            }
+        }
+        return $images;
     }
     public function createDataApi($params)
     {

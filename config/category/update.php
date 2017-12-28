@@ -12,15 +12,10 @@ return [
         'name' => 'parent_cate_id',
         'label' => 'parent category id',
         'id' => 'parent_cate_id',
-        'type' => 'select_add',
+        'type' => 'disable',
         'required' => 'required',
         'placeholder' => 'please insert parent_cate_id',
-        'select' => [
-            'displayname' => 'select parent category id',
-            'list' => [
 
-            ],
-        ],
     ],
     [
         'name' => 'cate_name_th',
@@ -96,6 +91,15 @@ return [
         'type' => 'hidden',
         'required' => 'required',
         'placeholder' => 'please insert level',
+
+    ],
+    [
+        'name' => 'parent_cate_id',
+        'label' => '',
+        'id' => 'parent_cate_id',
+        'type' => 'hidden',
+        'required' => 'required',
+        'placeholder' => 'please insert parent_cate_id',
 
     ],
 ];

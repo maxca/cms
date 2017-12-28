@@ -4,14 +4,47 @@ namespace App\Repositories;
 
 class ListFormRepository
 {
+    /**
+     * set form list
+     * @var array
+     */
     protected $formList = [];
+
+    /**
+     * set integraion data
+     * @var array
+     */
     protected $data = [];
+
+    /**
+     * set route list
+     * @var array
+     */
     protected $route;
+
+    /**
+     * set action route
+     * @var array
+     */
     protected $action = [];
+
+    /**
+     * set view variable
+     * @var array
+     */
+    protected $view;
 
     public function __construct($formList)
     {
         $this->formList = $formList;
+
+    }
+    public function initial()
+    {
+        $this->view['formList'] = $this->formList;
+        $this->view['route'] = $this->route;
+        $this->view['action'] = $this->action;
+        $this->view['title'] = $this->title;
     }
     public function setRoute($route)
     {
@@ -30,33 +63,27 @@ class ListFormRepository
     }
     public function genFormList($formListSearch, $listData)
     {
-        $view['data'] = $listData;
-        $view['formList'] = $this->formList;
-        $view['view'] = $formListSearch;
-        $view['route'] = $this->route;
-        $view['action'] = $this->action;
-        $view['title'] = $this->title;
-        return view('template.master-list', $view)->render();
+        $this->initial();
+        $this->view['data'] = $listData;
+        $this->view['view'] = $formListSearch;
+        return view('template.master-list', $this->view)->render();
     }
     public function genformCreate($formCreate)
     {
-        $view['view'] = $formCreate;
-        $view['route'] = $this->route;
-        $view['title'] = $this->title;
-        return view('template.master-create', $view)->render();
+        $this->initial();
+        $this->view['view'] = $formCreate;
+        return view('template.master-create', $this->view)->render();
     }
     public function getFormUpdate($formUpdate)
     {
-        $view['view'] = $formUpdate;
-        $view['route'] = $this->route;
-        $view['title'] = $this->title;
-        return view('template.master-update', $view)->render();
+        $this->initial();
+        $this->view['view'] = $formUpdate;
+        return view('template.master-update', $this->view)->render();
     }
-    public function getFormDetail($listData)
+    public function getFormDetail($formDetail)
     {
-        $view['data'] = $listData;
-        $view['route'] = $this->route;
-        $view['title'] = $this->title;
-        return view('template.master-detail', $view)->render();
+        $this->initial();
+        $this->view['view'] = $formDetail;
+        return view('template.master-detail', $this->view)->render();
     }
 }

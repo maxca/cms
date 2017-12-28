@@ -22,7 +22,7 @@ $page = $num / $perPage;?>
       @if($input['type'] =='text')
       {!! Form::text($input['name'],genOld($input),['class'=>'form-control','name' => $input['name'],'id' => $input['id'],'placeholder' => $input['placeholder']]) !!}
       @elseif ($input['type'] == 'select')
-      {!! Form::select($input['name'],$input['select']['list'], genSelect($input), ['class'=>'form-control','placeholder' => $input['placeholder']]) !!}
+      {!! Form::select($input['name'],$input['select']['list'], genOld($input), ['class'=>'form-control','placeholder' => $input['placeholder']]) !!}
       @elseif ($input['type'] == 'select_add')
       {!! Form::select($input['name'],$input['select']['list'], genSelect($input), ['class'=>'form-control','placeholder' => $input['placeholder']]) !!}
       @elseif($input['type'] == 'hidden')
