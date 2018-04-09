@@ -8,9 +8,64 @@ use App\Repositories\UploadFileRepository as UploadImage;
 
 class BaseRepository implements BaseRepositoryInterface
 {
+    /**
+     * set total
+     * @var int
+     */
     protected $total;
+
+    /**
+     * [$limit description]
+     * @var [type]
+     */
+    protected $limit;
+
+    /**
+     * [$offset description]
+     * @var [type]
+     */
+    protected $offset;
+
+    /**
+     * [$orderBy description]
+     * @var [type]
+     */
+    protected $orderBy;
+
+    /**
+     * [$sortTyp description]
+     * @var [type]
+     */
+    protected $sortTyp;
+
+    /**
+     * [$model description]
+     * @var [type]
+     */
     protected $model;
-    protected $lang, $mergeCheck, $dataMerge;
+
+    /**
+     * [$lang description]
+     * @var [type]
+     */
+    protected $lang;
+
+    /**
+     * [$mergeCheck description]
+     * @var [type]
+     */
+    protected $mergeCheck;
+
+    /**
+     * [$dataMerge description]
+     * @var [type]
+     */
+    protected $dataMerge;
+
+    /**
+     * [$langList description]
+     * @var [type]
+     */
     protected $langList = ['en', 'th'];
 
     /**
@@ -145,6 +200,18 @@ class BaseRepository implements BaseRepositoryInterface
     {
         $this->response = curlPostRAW($url, $this->token, $data);
         return $this->response;
+    }
+    protected function setParams(&$params)
+    {
+        $params['limit'] = isset($params['limit']) ? $params['limit'] : $this->limit;
+        $params['offset'] = isset($params['offset']) ? $params['offset'] : $this->offset;
+        $params['order_by'] = isset($params['order_by']) ? $params['order_by'] : $this->orderBy;
+        $params['sort_type'] = isset($params['sort_type']) ? $params['sort_type'] : $this->sortType;
+    }
+    public function callGet($url, $params = array())
+    {
+        $this->setParams($params);
+        return curlGet($url, $this->token, $params);
     }
     public function uploadImage($images)
     {

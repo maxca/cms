@@ -6,7 +6,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{!! access()->user()->picture !!}" class="img-circle" alt="User Image" />
+                <img src="{!! asset('images/profile.jpg') !!}" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
                 <p>{!! access()->user()->name !!}</p>
@@ -42,11 +42,10 @@
                 </li>
             @endauth
 
-            <li class="{{ Active::pattern('admin/transaction/*') }}">
-                <a href="{!! route('transaction.list') !!}"><i class="fa fa-laptop"></i>URL Generate</a>
-            </li>
             <li class="{{ Active::pattern('admin/members/*') }}">
-                <a href="{!! route('members.view') !!}"><i class="fa fa-laptop"></i>Members</a>
+                <a href="{!! route('members.view') !!}">
+                    <i class="fa fa fa-users"></i><span class="text-bold">Members</span>
+                </a>
             </li>
 
             <li class="{{ Active::pattern('admin/shop/*') }}">

@@ -31,15 +31,16 @@ class MemberRepository extends BaseRepositoryWrap
      * @var array
      */
     protected $configFormColumn = [
-        "cate_id",
-        "parent_cate_id",
+        "customer_code",
+        "name",
+        "eamil",
+        "mobile_phone",
+        "identification",
         "level",
-        "icon_img",
-        "cate_img_th",
-        "cate_img_en",
-        "sort",
-        "cate_name_th",
-        "cate_name_en",
+        "status",
+        "brand",
+        "created_at",
+        "updated_at",
     ];
 
     /**

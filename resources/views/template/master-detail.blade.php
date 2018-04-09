@@ -21,7 +21,40 @@
                 <h3 class="box-title">Detail {{$title}}</h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-             {!! $view!!}
+             <table id="user" class="table table-bordered table-striped" style="clear: both">
+                    <tbody>
+                        @if(!empty($data))
+                        @foreach ($data as $key => $value)
+                        @if(in_array($key,$images))
+                        <tr>
+                            <td>{{$key}}</td>
+                            <td>
+                                @if(is_array($value))
+                                @foreach ($value as $keyImage => $image)
+                                <a href="{{$image}}" target="_blank">
+                                    <img src="{{$image}}" width="50%" height="50%" class="img img-thumbnail">
+                                </a>
+                                @endforeach
+                                @else
+                                <a href="{{$value}}" target="_blank">
+                                    <img src="{{$value}}" width="50%" height="50%" class="img img-thumbnail">
+                                </a>
+                                @endif
+                            </td>
+                        </tr>
+                        @elseif(!empty($value))
+                            <tr>
+                                <td>{{$key}}</td>
+                                <td>{{renderArray($value)}}</td>
+                            </tr>
+                        @endif
+                        @endforeach
+                        @else
+                            Not found Data.
+                        @endif
+                    </tbody>
+                </table>
+             {{-- {!! $view!!} --}}
              {!! Form::hidden('id',Request::get('id'))!!}
             </div><!-- /.box-body -->
             <div class="box box-footer">

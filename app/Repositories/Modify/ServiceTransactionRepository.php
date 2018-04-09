@@ -111,7 +111,7 @@ class ServiceTransactionRepository implements ServiceTransactionInterface
 
         $call3rdApi = $this->call3rd($url);
         if ($call3rdApi['header']['code'] == 200) {
-            return $this->paginate($call3rdApi['data'], $call3rdApi['total']);
+            return $this->paginate($call3rdApi['data'], $call3rdApi['meta']['total']);
         } else {
             return $this->paginate([], 0);
         }

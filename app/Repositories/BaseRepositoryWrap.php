@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Repositories\BaseRepository;
 use App\Repositories\ListFormRepository;
 use App\Repositories\Modify\ServiceTransactionRepository as Call3rd;
+use App\Repositories\Provinces\ProvincesRepository as Provinces;
 
 abstract class BaseRepositoryWrap extends BaseRepository
 {
@@ -92,7 +93,7 @@ abstract class BaseRepositoryWrap extends BaseRepository
      * set inject node data
      * @var array
      */
-    protected $injectNode;
+    protected $injectNode = [];
 
     /**
      * set hidden column
@@ -104,7 +105,31 @@ abstract class BaseRepositoryWrap extends BaseRepository
      * set image column list
      * @var array
      */
-    protected $imageList;
+    protected $imageList = [];
+
+    /**
+     * set global variable
+     * @var array
+     */
+    protected $sharedView = [];
+
+    /**
+     * set custom link
+     * @var array
+     */
+    protected $customLink = [];
+
+    /**
+     * set need address.
+     * @var boolean
+     */
+    protected $needAddress = false;
+
+    /**
+     * set default lang
+     * @var string
+     */
+    protected $lang = 'th';
 
     public function __construct()
     {
@@ -131,12 +156,28 @@ abstract class BaseRepositoryWrap extends BaseRepository
             $this->configEndpoint[$key] = env('API_URL') . $value;
         }
     }
+    /**
+     * set sharedview  need global onload view
+     * @return array
+     */
+    protected function getsharedView()
+    {
+        $this->sharedView['simple'] = ['key' => 'value'];
+        if ($this->needAddress === true) {
+            $this->sharedView['province'] =
+            app(Provinces::class)->callListDataNoPage();
+        }
+    }
     private function setView()
     {
+        $this->getsharedView();
         $this->view = app(ListFormRepository::class, [$this->configFormColumn])
             ->setRoute($this->routeAction)
             ->setAction($this->action)
-            ->setTitle($this->title);
+            ->setTitle($this->title)
+            ->setImageList($this->imageList)
+            ->setCustomlink($this->customLink)
+            ->setShareView($this->sharedView);
     }
     public function getListData()
     {
@@ -149,6 +190,10 @@ abstract class BaseRepositoryWrap extends BaseRepository
     {
         return $this->call3rd->warpCallPage($this->configEndpoint['list'], $this->params);
     }
+    public function callListDataNoPage()
+    {
+        return parent::callGet($this->configEndpoint['list'], $this->params);
+    }
     public function getDataByid($id = 0)
     {
         $data = $this->call3rd->warpCallPage($this->configEndpoint['list'] . '?id=' . $id);
@@ -158,13 +203,14 @@ abstract class BaseRepositoryWrap extends BaseRepository
     {
         $data = $this->getDataByid($id);
         $listData = $this->getDataByid($id);
-        return $this->view->getFormDetail(genformCreate($this->configUpdate, $listData));
+
+        $form = genformCreate($this->configUpdate, $listData);
+        return $this->view->getFormDetail($form, $listData);
     }
     public function getCreateForm()
     {
         $this->routeAction = $this->routeAliasName['create'];
         $this->setView();
-
         return $this->view->genformCreate(genformCreate($this->configCreate, $this->injectNode));
     }
     public function checkHiddenColumnCreate()
@@ -180,7 +226,19 @@ abstract class BaseRepositoryWrap extends BaseRepository
         $this->routeAction = $this->routeAliasName['update'];
         $this->setView();
         $listData = $this->getDataByid($id);
+        $this->genSelectAddWithData($listData);
         return $this->view->getFormUpdate(genformCreate($this->configUpdate, $listData));
+    }
+
+    protected function genSelectAddWithData(&$listData)
+    {
+        foreach ($this->injectNode as $key => $value) {
+            if (array_key_exists($key, $listData)) {
+                $listData[$key] = $this->injectNode[$key];
+                // $listData[$key] = $listData[$key];
+            }
+
+        }
     }
     public function modifyData($type = 'create')
     {

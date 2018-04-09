@@ -34,10 +34,27 @@ class ListFormRepository
      */
     protected $view;
 
+    /**
+     * set image variable
+     * @var array
+     */
+    protected $images;
+
+    /**
+     * set custom link
+     * @var array
+     */
+    protected $customLink;
+
+    /**
+     * set shared view
+     * @var array
+     */
+    protected $sharedView;
+
     public function __construct($formList)
     {
         $this->formList = $formList;
-
     }
     public function initial()
     {
@@ -45,6 +62,14 @@ class ListFormRepository
         $this->view['route'] = $this->route;
         $this->view['action'] = $this->action;
         $this->view['title'] = $this->title;
+        $this->view['images'] = $this->images;
+        $this->view['customLink'] = $this->customLink;
+        $this->view['sharedView'] = $this->sharedView;
+    }
+    public function setShareView($data)
+    {
+        $this->sharedView = $data;
+        return $this;
     }
     public function setRoute($route)
     {
@@ -59,6 +84,16 @@ class ListFormRepository
     public function setTitle($title)
     {
         $this->title = $title;
+        return $this;
+    }
+    public function setImageList($images)
+    {
+        $this->images = $images;
+        return $this;
+    }
+    public function setCustomlink($customLink)
+    {
+        $this->customLink = $customLink;
         return $this;
     }
     public function genFormList($formListSearch, $listData)
@@ -80,10 +115,11 @@ class ListFormRepository
         $this->view['view'] = $formUpdate;
         return view('template.master-update', $this->view)->render();
     }
-    public function getFormDetail($formDetail)
+    public function getFormDetail($formDetail, $data)
     {
         $this->initial();
         $this->view['view'] = $formDetail;
+        $this->view['data'] = $data;
         return view('template.master-detail', $this->view)->render();
     }
 }

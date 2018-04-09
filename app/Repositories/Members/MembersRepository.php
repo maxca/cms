@@ -10,10 +10,10 @@ class MembersRepository extends BaseRepositoryWrap
      * @var array
      */
     protected $configEndpoint = [
-        'list' => '/cms/members/list',
-        'create' => '/cms/members/create',
-        'update' => '/cms/members/update',
-        'delete' => '/cms/members/delete',
+        'list' => '/api/v1/members/list',
+        'create' => '/api/v1/members/create',
+        'update' => '/api/v1/members/update-profile',
+        'delete' => '/api/v1/members/delete',
     ];
 
     /**
@@ -31,34 +31,16 @@ class MembersRepository extends BaseRepositoryWrap
      * @var array
      */
     protected $configFormColumn = [
-        'member_type',
-        // 'role_id',
-        // 'sdfsdf',
-        // 'facebook_id',
-        // 'google_id',
-        'email',
-        'first_name',
-        'last_name',
-        // 'telephone',
-        'mobile',
-        'birthday',
-        'gender',
-        // 'country',
-        // 'address',
-        'province',
-        // 'district',
-        // 'subdistrict',
-        // 'postal_code',
-        // 'soi',
-        // 'road',
-        // 'building_type',
-        // 'id_card_no',
-        // 'img_profile',
-        // 'path',
-        // 'lastlogin_ip',
-        'confirm_email',
-        'status',
-        'created_at',
+        "customer_code",
+        "name",
+        "email",
+        "mobile_phone",
+        "identification",
+        "level",
+        "status",
+        "brand",
+        "created_at",
+        // "updated_at",
     ];
 
     /**
@@ -73,6 +55,7 @@ class MembersRepository extends BaseRepositoryWrap
         'route_view' => 'members.detail',
         'route_edit' => 'members.submit.update',
         'route_dele' => 'members.submit.delete',
+        'route_list' => 'members.view',
     ];
 
     /**
